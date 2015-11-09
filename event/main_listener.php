@@ -8,7 +8,7 @@
 */
 
 
-namespace unvanquished\simplesamlphpauth\event
+namespace unvanquished\simplesamlphpauth\event;
 
 /**
 * @ignore
