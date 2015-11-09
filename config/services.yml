@@ -1,0 +1,13 @@
+services:
+    auth.provider.simplesamlphp:
+        class: phpbb_ext_unvanquished_auth_provider_simplesamlphp
+        arguments:
+            - @dbal.conn
+            - @config
+            - @user
+        tags:
+            - { name: auth.provider }
+    unvanquished.simplesamlphp.listener:
+        class: unvanquished\simplesamlphpauth\event\main_listener
+        tags:
+            - { name: event.listener }

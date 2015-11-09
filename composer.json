@@ -1,0 +1,16 @@
+{
+	"name": "unvanquished/simplesamlphpauth",
+	"type": "phpbb-extension",
+	"description": "SimpleSAMLphp Authentication for phpBB 3.1",
+	"homepage": "https://github.com/Unvanquished/phpbb-simplesamlauth",
+	"version": "0.1.0",
+	"time": "2015-11-09",
+	"license": "GPL-2.0",
+	"authors": [{
+			"name": "Unvanquished Developers",
+			"homepage": "https://www.unvanquished.net",
+		}],
+	"require": {
+		"php": ">=5.3.3"
+	},
+}
