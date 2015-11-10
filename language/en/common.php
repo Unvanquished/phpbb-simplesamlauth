@@ -19,6 +19,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 $lang = array_merge($lang, array(
+	'SAML_NAME' => 'SimpleSAMLphp Configuration',
 	'SAML_NOT_IMPLEMENTED' => 'This functionality is not implemented (yet).',
 	'SAML_PATH' => 'SimpleSAMLphp path',
 	'SAML_PATH_EXPLAIN' => 'Absolute or relative path to your simpleSAMLphp library.',

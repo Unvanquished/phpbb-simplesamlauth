@@ -190,25 +190,25 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 			'TEMPLATE_VARS' => array(),
 			'BLOCK_VAR_NAME' => 'options',
 			'BLOCK_VARS' => array(
-				'saml_path' => array(
+				array(
 					'NAME' => 'saml_path',
 					'SHORT_DESC' => $this->user->lang['SAML_PATH'],
 					'EXPLAIN' => $this->user->lang['SAML_PATH_EXPLAIN'],
 					'VALUE' => $new_config['saml_path']
 				),
-				'saml_sp' => array(
+				array(
 					'NAME' => 'saml_sp',
 					'SHORT_DESC' => $this->user->lang['SAML_SP'],
 					'EXPLAIN' => $this->user->lang['SAML_SP_EXPLAIN'],
 					'VALUE' => $new_config['saml_sp']
 				),
-				'saml_uid' => array(
+				array(
 					'NAME' => 'saml_uid',
 					'SHORT_DESC' => $this->user->lang['SAML_UID'],
 					'EXPLAIN' => $this->user->lang['SAML_UID_EXPLAIN'],
 					'VALUE' => $new_config['saml_uid']
 				),
-				'saml_mail' => array(
+				array(
 					'NAME' => 'saml_mail',
 					'SHORT_DESC' => $this->user->lang['SAML_MAIL'],
 					'EXPLAIN' => $this->user->lang['SAML_MAIL_EXPLAIN'],
