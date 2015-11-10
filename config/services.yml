@@ -9,5 +9,10 @@ services:
             - { name: auth.provider }
     unvanquished.simplesamlphp.listener:
         class: unvanquished\simplesamlphpauth\event\main_listener
+        arguments:
+            - @config
+            - @template
+            - @user
+            - %core.php_ext%
         tags:
             - { name: event.listener }

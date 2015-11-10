@@ -40,7 +40,7 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 		$this->config = $config;
 		$this->user = $user;
 
-		if (!array_key_exists('saml_path',  $config) || empty($config['saml_path']))
+		if (empty($config['saml_path']))
 		{
 			return;
 		}
@@ -49,6 +49,8 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 		{
 			return;
 		}
+		global $request;
+		$request->enable_super_globals();
 		if (!(include_once($config['saml_path'] . '/lib/_autoload.php')))
 		{
 			return;
@@ -58,30 +60,39 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 			return;
 		}
 
-		$saml = new SimpleSAML_Auth_Simple($config['saml_sp']);
+		$this->saml = new \SimpleSAML_Auth_Simple($config['saml_sp']);
 	}
 
 	public function init()
 	{
-		if (!array_key_exists('saml_path',  $config) || empty($config['saml_path']))
+		if (empty($this->config['saml_path']))
 		{
 			return $this->user->lang['SAML_CANNOT_INCLUDE'];
 		}
 
-		if (!is_dir($config['saml_path']))
+		if (!is_dir($this->config['saml_path']))
 		{
 			return $this->user->lang['SAML_NOT_DIRECTORY'];
 		}
-		if (!(include_once($config['saml_path'] . '/lib/_autoload.php')))
+		if (!(include_once($this->config['saml_path'] . '/lib/_autoload.php')))
 		{
 			return $this->user->lang['SAML_CANNOT_INCLUDE'];
 		}
-		if (!is_string($config['saml_sp']) || empty($config['saml_sp']))
+		if (!is_string($this->config['saml_sp']) || empty($this->config['saml_sp']))
 		{
 			return $this->user->lang['SAML_INVALID_SP'];
 		}
-
 		return false;
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function autologin()
+	{
+		if (!$this->saml->isAuthenticated())
+			return array();
+		return $this->get_user_row($this->get_attribute($this->config['saml_uid']));
 	}
 
 	/**
@@ -89,11 +100,11 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 	*/
 	public function login($username, $password)
 	{
-		auth_or_redirect();
+		$this->auth_or_redirect();
 		if ($this->saml->isAuthenticated())
 		{
-			$username = get_attribute($this->config['saml_uid']);
-			$user_row = get_user_row($username);
+			$username = $this->get_attribute($this->config['saml_uid']);
+			$user_row = $this->get_user_row($username);
 
 			if (empty($user_row))
 			{
@@ -153,7 +164,6 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 				);
 			}
 		}
-
 	}
 
 	/**
@@ -169,6 +179,9 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 	*/
 	public function validate_session($user)
 	{
+		if ($this->saml->isAuthenticated()) {
+			return $user['username_clean'] === utf8_clean_string($this->get_attribute($this->config['saml_uid']));
+		}
 		return $this->saml->isAuthenticated();
 	}
 
@@ -186,35 +199,35 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 	public function get_acp_template($new_config)
 	{
 		return array(
-			'TEMPLATE_FILE'	=> 'auth_provider_simplesamlphp.html',
-			'TEMPLATE_VARS' => array(),
-			'BLOCK_VAR_NAME' => 'options',
+			'BLOCK_VAR_NAME' => 'saml',
 			'BLOCK_VARS' => array(
-				array(
+				'saml_path' => array(
 					'NAME' => 'saml_path',
 					'SHORT_DESC' => $this->user->lang['SAML_PATH'],
 					'EXPLAIN' => $this->user->lang['SAML_PATH_EXPLAIN'],
-					'VALUE' => $new_config['saml_path']
+					'VALUE' => $new_config['saml_path'],
 				),
-				array(
+				'saml_sp' => array(
 					'NAME' => 'saml_sp',
 					'SHORT_DESC' => $this->user->lang['SAML_SP'],
 					'EXPLAIN' => $this->user->lang['SAML_SP_EXPLAIN'],
-					'VALUE' => $new_config['saml_sp']
+					'VALUE' => $new_config['saml_sp'],
 				),
-				array(
+				'saml_uid' => array(
 					'NAME' => 'saml_uid',
 					'SHORT_DESC' => $this->user->lang['SAML_UID'],
 					'EXPLAIN' => $this->user->lang['SAML_UID_EXPLAIN'],
-					'VALUE' => $new_config['saml_uid']
+					'VALUE' => $new_config['saml_uid'],
 				),
-				array(
+				'saml_mail' => array(
 					'NAME' => 'saml_mail',
 					'SHORT_DESC' => $this->user->lang['SAML_MAIL'],
 					'EXPLAIN' => $this->user->lang['SAML_MAIL_EXPLAIN'],
-					'VALUE' => $new_config['saml_mail']
+					'VALUE' => $new_config['saml_mail'],
 				),
 			),
+			'TEMPLATE_FILE'	=> '@unvanquished_simplesamlphpauth/auth_provider_simplesamlphp.html',
+			'TEMPLATE_VARS' => array(),
 		);
 	}
 
@@ -238,7 +251,7 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 	*/
 	private function get_username()
 	{
-		return get_attribute($this->config['saml_uid']);
+		return $this->get_attribute($this->config['saml_uid']);
 	}
 
 	/** Get the user row.
@@ -272,7 +285,7 @@ class simplesamlphpauth extends \phpbb\auth\provider\base
 	{
 		$returnTo = generate_board_url() . '/';
 		$returnTo .= request_var('redirect', $this->user->page['page']);
-		$saml->requireAuth(array(
+		$this->saml->requireAuth(array(
 			'ReturnTo' => $returnTo,
 		));
 	}
