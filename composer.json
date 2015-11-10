@@ -1,25 +1,24 @@
 {
-	"name": "unvanquished/simplesamlphpauth",
-	"type": "phpbb-extension",
-	"description": "SimpleSAMLphp Authentication for phpBB 3.1",
-	"homepage": "https://github.com/Unvanquished/phpbb-simplesamlauth",
-	"version": "0.1.0",
-	"time": "2015-11-09",
-	"license": "GPL-2.0",
-	"authors": [{
-			"name": "Unvanquished Developers",
-			"homepage": "https://www.unvanquished.net",
-		}],
-	"require": {
-		"php": ">=5.3.3"
-	},
-	"require-dev": {
-		"phpbb/epv": "dev-master"
-	},
-	"extra": {
-		"display-name": "SimpleSAMLphp Authentication",
-		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0-RC2,<3.2.*@dev"
-		}
-	}
+    "name": "unvanquished/simplesamlphpauth",
+    "type": "phpbb-extension",
+    "description": "SimpleSAMLphp Authentication",
+    "homepage": "https://github.com/Unvanquished/phpbb-simplesamlphpauth",
+    "version": "1.0.1",
+    "time": "2015-11-09",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Unvanquished Development",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "extra": {
+        "display-name": "SimpleSAMLphp Auth",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.4-RC1,<3.2.*@dev"
+        }
+    }
 }

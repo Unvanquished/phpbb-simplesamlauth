@@ -1,6 +1,6 @@
 services:
     auth.provider.simplesamlphp:
-        class: phpbb_ext_unvanquished_auth_provider_simplesamlphp
+        class: unvanquished\simplesamlphpauth\auth\provider\simplesamlphpauth
         arguments:
             - @dbal.conn
             - @config

@@ -6,6 +6,9 @@
 * @license hhttp://opensource.org/licenses/gpl-2.0.php GPLv2.0
 *
 */
+
+namespace unvanquished\simplesamlphpauth\auth\provider;
+
 /**
 * @ignore
 */
@@ -14,6 +17,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+
 /**
 * SimpleSAMLphp authentication provider for phpBB3
 *
@@ -21,7 +25,7 @@ if (!defined('IN_PHPBB'))
 *
 * @package simplesamlauth
 */
-class phpbb_ext_unvanquished_auth_provider_simplesamlphp implements phpbb_auth_provider_base
+class simplesamlphpauth extends \phpbb\auth\provider\base
 {
 	protected $db;
 	protected $config;
@@ -38,27 +42,23 @@ class phpbb_ext_unvanquished_auth_provider_simplesamlphp implements phpbb_auth_p
 
 		if (!array_key_exists('saml_path',  $config) || empty($config['saml_path']))
 		{
-			trigger_error($user->lang['SAML_CANNOT_INCLUDE'], E_USER_WARNING);
 			return;
 		}
 
 		if (!is_dir($config['saml_path']))
 		{
-			trigger_error($user->lang['SAML_NOT_DIRECTORY'], E_USER_WARNING);
 			return;
 		}
 		if (!(include_once($config['saml_path'] . '/lib/_autoload.php')))
 		{
-			trigger_error($user->lang['SAML_CANNOT_INCLUDE'], E_USER_WARNING);
 			return;
 		}
 		if (!is_string($config['saml_sp']) || empty($config['saml_sp']))
 		{
-			trigger_error($user->lang['SAML_INVALID_SP'], E_USER_WARNING);
 			return;
 		}
 
-		$saml = new SimpleSAML_Auth_Simple($config['saml_sp'];
+		$saml = new SimpleSAML_Auth_Simple($config['saml_sp']);
 	}
 
 	public function init()
@@ -175,7 +175,7 @@ class phpbb_ext_unvanquished_auth_provider_simplesamlphp implements phpbb_auth_p
 	/**
 	 * {@inheritdoc}
 	 */
-	public function acp($new)
+	public function acp()
 	{
 		return array('saml_path', 'saml_sp', 'saml_uid', 'saml_mail');
 	}
@@ -187,6 +187,7 @@ class phpbb_ext_unvanquished_auth_provider_simplesamlphp implements phpbb_auth_p
 	{
 		return array(
 			'TEMPLATE_FILE'	=> 'auth_provider_simplesamlphp.html',
+			'TEMPLATE_VARS' => array(),
 			'BLOCK_VAR_NAME' => 'options',
 			'BLOCK_VARS' => array(
 				'saml_path' => array(
