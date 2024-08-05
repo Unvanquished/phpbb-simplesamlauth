@@ -2,17 +2,17 @@ services:
     auth.provider.simplesamlphp:
         class: unvanquished\simplesamlphpauth\auth\provider\simplesamlphpauth
         arguments:
-            - @dbal.conn
-            - @config
-            - @user
+            - '@dbal.conn'
+            - '@config'
+            - '@user'
         tags:
             - { name: auth.provider }
     unvanquished.simplesamlphp.listener:
         class: unvanquished\simplesamlphpauth\event\main_listener
         arguments:
-            - @config
-            - @template
-            - @user
-            - %core.php_ext%
+            - '@config'
+            - '@template'
+            - '@user'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }
